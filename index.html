@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+    <meta charset="UTF-8">
+    <title>输入智能优化</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <script src="js/jquery.js"></script>
+    <script src="js/angular.js"></script>
+    <style>
+        .form-control{
+            margin: 30px;
+        }
+    </style>
+</head>
+<body ng-controller="testCtrl">
+<div>
+    <form name="formTest">
+
+        大于0的整数： <input class="form-control" name="num" min="0" ng-model="num" ng-pattern="/^(0|([1-9][0-9]*))$/" ng-init='0' type="number" />
+        <span>{{formTest.num.$error.pattern}}</span>
+
+        16进制数： <input class="form-control" name="hexadecimal" ng-pattern="/^(\\x([0-9]|[a-fA-F]){2})+$/" ng-model="hexadecimal" type="text"/>
+        <span>{{formTest.hexadecimal.$error.pattern}}</span>
+    </form>
+
+</div>
+
+</body>
+<script type="text/javascript">
+    var myApp = angular.module('myApp', ['ng']);
+    myApp.controller('testCtrl', function ($scope) {
+//        $scope.num = 0
+//      $scope.$watch('num',function (newVal) {
+//          return $scope.num = $scope.num.split('.')[0]
+//      })
+    })
+
+</script>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+    <meta charset="UTF-8">
+    <title>js trim function</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <script src="js/angular.js"></script>
+</head>
+<body ng-controller="testCtrl">
+<div style="margin: 30px;">
+    <input type="text" ng-model="test" class="form-control" style="width: 400px;display: inline-block;">
+    <button class="btn btn-primary"  ng-click="stringTrim(',')">转化</button>
+</div>
+<script>
+    var myApp = angular.module('myApp', []);
+    myApp.controller('testCtrl',function ($scope) {
+        $scope.stringTrim = function (char,type) {
+//            if (char) {
+//                if (type == 'left') {
+//                    $scope.test =  $scope.test.replace(new RegExp('^\\'+char+'+', 'g'), '');
+//                } else if (type == 'right') {
+//                    $scope.test = $scope.test.replace(new RegExp('\\'+char+'+$', 'g'), '');
+//                }
+//                $scope.test = $scope.test.replace(new RegExp('^\\'+char+'+|\\'+char+'+$', 'g'), '');
+//            }
+//            $scope.test = $scope.test.replace(/^\s+|\s+$/g, '');
+            $scope.test = $scope.test.replace(new RegExp('^(\\,|\\，)+|(\\,|\\，)+$', 'g'), '');
+            console.log($scope.test)
+        }
+    })
+</script>
+</body>
+</html>

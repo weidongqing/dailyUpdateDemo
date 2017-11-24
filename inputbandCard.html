@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+    <meta charset="UTF-8">
+    <title>输入智能优化</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <script src="js/jquery.js"></script>
+    <script src="js/angular.js"></script>
+    <style>
+        .form-control{
+            margin: 30px;
+        }
+    </style>
+</head>
+<body ng-controller="testCtrl">
+<div style="width: 50%">
+    <input class="form-control" ng-model="cardnum" ng-keypress="testCardnum($event)" placeholder="请输入银行卡号">
+    <input class="form-control" ng-model="hexadecimal" ng-keypress="testHexadecimal($event)" placeholder="请输入16进制数">
+    {{errmessage}}
+
+    <!--<input type="text" id="haorooms"/>-->
+</div>
+
+</body>
+<script type="text/javascript">
+    var myApp = angular.module('myApp', ['ng']);
+    myApp.controller('testCtrl', function ($scope) {
+        //银行卡号
+        $scope.cardnum = '';
+        $scope.testCardnum = function (e) {
+            if (/\S{5}/.test($scope.cardnum)) {
+                $scope.cardnum = $scope.cardnum.replace(/\s/g, '').replace(/(.{4})/g, "$1 ")
+            }
+        };
+        //十六进制
+        $scope.hexadecimal = '';
+        $scope.testHexadecimal = function (e) {
+            if (/\S{1}/.test($scope.hexadecimal)){
+                if(/[0-9a-f]+$/.test($scope.hexadecimal)){
+                    $scope.errmessage = '';
+                    $scope.hexadecimal = $scope.hexadecimal.replace(/(.{2})/g, "$1 ").replace(/\s$/, "");
+                }else {
+                    $scope.errmessage = '请输入16进制数(0~f)';
+                }
+
+            }
+        };
+
+
+    })
+    //        document.getElementById('haorooms').onkeyup = function (event) {
+    //            if((event.which >= 48 && event.which <= 57) ||(event.which >= 96 && event.which <= 105 )){
+    //                var v = this.value;
+    //                if(/\S{5}/.test(v)){
+    //                    this.value = v.replace(/\s/g, '').replace(/(.{4})/g, "$1 ")
+    //                }
+    //            }
+    //        }
+
+</script>
+</html>

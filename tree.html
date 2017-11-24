@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+    <meta charset="UTF-8">
+    <title>输入智能优化</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <script src="js/jquery.js"></script>
+    <script src="js/angular.js"></script>
+    <style>
+        .tree li {
+            cursor: pointer;
+            padding-left: 1.3em;
+        }
+
+        .tree ul {
+            list-style: none;
+            padding-left: 0;
+        }
+    </style>
+</head>
+<body ng-controller="testCtrl">
+<div style="width:800px;">
+    <div class="row">
+        <div style="height:450px;overflow:auto;" class="col-sm-4"><span>目前支持的文件格式</span>
+            <div class="formatTree">
+                <ul>
+                    <li ng-repeat="item in allFormats" ng-class="{closed:item.closed}"
+                        style="border:1px solid #eee;border-radius:5px">
+                        <div ng-click="item.closed=!item.closed" style="padding:5px;"><span
+                                ng-class="item.closed?'iconfont icon-collapse':'iconfont icon-expand'"
+                                style="color:#707070;font-size:12px;"></span><span style="margin-left:10px">{{item.name}}</span>
+                        </div>
+                        <div ng-class="{hidden: item.closed}"
+                             style="border-top:1px solid #eee;padding:5px 10px 5px 10px;">
+                            <span ng-repeat="i in item.formats">
+                                {{i}}
+                            </span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    var myApp = angular.module('myApp', ['ng']);
+    myApp.controller('testCtrl', function ($scope) {
+        $scope.allFormats = [
+            {
+                closed: true,
+                name: "中国",
+                formats: ['test', 'this','is','a','very','easy','haha','example']
+            },
+            {
+                closed: true,
+                name: "法国",
+                formats: ['a', 'b']
+            }
+        ];
+    })
+
+</script>
+</html>
