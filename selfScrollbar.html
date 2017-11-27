@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+<title>自定义滚动条</title>
+<link rel="stylesheet" href="css/bootstrap.css">
+<style>
+    #wrap {
+        width: 300px;
+        height: 200px;
+        border: 1px solid #ccc;
+        margin: 0 auto;
+        position: relative;
+        overflow: hidden;
+    }
+
+    #content {
+        width: 280px;
+        position: absolute;
+        left: 0;
+        padding: 5px;
+    }
+
+    #self_scrollbar {
+        width: 10px;
+        height: 200px;
+        background-color: #999;
+        position: absolute;
+        right: 0;
+    }
+
+    #thumb {
+        width: 10px;
+        height: 30px;
+        background-color: #666;
+        position: absolute;
+        left: 0;
+        top: 0;
+        cursor: pointer;
+    }
+
+</style>
+<body>
+<div id="wrap">
+    <div id="content">
+        The scrollbar set of CSS properties is a proprietary style hook from Internet Explorer 5.5, which let designers
+        create custom themes for the browser's native scrollbars. Currently, it is exposed behind the -webkit vendor
+        prefix for use in browsers using the Webkit (and Blink) rendering engine. This almanac entry is an overview, for
+        a more complete breakdown of working with custom scrollbars, please read this CSS-Tricks article.
+        The scrollbar set of CSS properties is a proprietary style hook from Internet Explorer 5.5, which let designers
+        create custom themes for the browser's native scrollbars. Currently, it is exposed behind the -webkit vendor
+        prefix for use in browsers using the Webkit (and Blink) rendering engine. This almanac entry is an overview, for
+        a more complete breakdown of working with custom scrollbars, please read this CSS-Tricks article.
+        The scrollbar set of CSS properties is a proprietary style hook from Internet Explorer 5.5, which let designers
+        create custom themes for the browser's native scrollbars. Currently, it is exposed behind the -webkit vendor
+        prefix for use in browsers using the Webkit (and Blink) rendering engine. This almanac entry is an overview, for
+        a more complete breakdown of working with custom scrollbars, please read this CSS-Tricks article.The scrollbar
+        set of CSS properties is a proprietary style hook from Internet Explorer 5.5, which let designers
+        create custom themes for the browser's native scrollbars. Currently, it is exposed behind the -webkit vendor
+        prefix for use in browsers using the Webkit (and Blink) rendering engine. This almanac entry is an overview, for
+        a more complete breakdown of working with custom scrollbars, please read this CSS-Tricks article.
+    </div>
+    <div id="self_scrollbar">
+        <div id="thumb"></div>
+    </div>
+</div>
+<script>
+    var pWrap = document.getElementById('wrap'),
+        pContent = document.getElementById('content'),
+        pScrollbar = document.getElementById('self_scrollbar'),
+        pThumb = document.getElementById('thumb');
+
+    pThumb.onmousedown = function(e) {
+        e = e || event;
+
+        var disY = e.clientY - this.offsetTop;
+
+        if (pThumb.setCapture) {
+            pThumb.onmousemove = fnMove;
+            pThumb.onmouseup = fnUp;
+            pThumb.setCapture();
+        } else {
+            document.onmousemove = fnMove;
+            document.onmouseup = fnUp;
+        }
+
+        function fnMove(ev) {
+            ev = ev || event;
+
+            var t = ev.clientY - disY;
+            setTop(t);
+        };
+
+        function fnUp() {
+            this.onmousemove = null;
+            this.onmouseup = null;
+
+            if (this.releaseCapture) {
+                this.releaseCapture();
+            }
+        };
+
+        return false;
+    };
+
+    function setTop(t) {
+        var down = pScrollbar.offsetHeight - pThumb.offsetHeight;
+
+        if (t < 0) {
+            t = 0;
+        } else if (t > down) {
+            t = down
+        }
+
+        pThumb.style.top = t + 'px';
+
+        var scale = t / down;
+        pContent.style.top = -(pContent.offsetHeight - pWrap.offsetHeight) * scale + 'px';
+        console.log(pContent.style.top)
+    }
+
+    addEvent(pContent, 'mousewheel', mousewheel);
+    addEvent(pContent, 'DOMMouseScroll', mousewheel);
+    addEvent(pScrollbar, 'mousewheel', mousewheel);
+    addEvent(pScrollbar, 'DOMMouseScroll', mousewheel);
+
+    function addEvent(obj, oEvent, fn) {
+        if (obj.attachEvent) {
+            obj.attachEvent('on' + oEvent, fn);
+        } else {
+            obj.addEventListener(oEvent, fn, false);
+        }
+    }
+
+    function mousewheel(e) {
+        var ev = e || event,
+            bDown = false;
+
+        bDown = ev.wheelDelta ? ev.wheelDelta < 0 : ev.detail > 0;
+
+        if (bDown) {
+            setTop(pThumb.offsetTop + 10);
+        } else {
+            setTop(pThumb.offsetTop - 10);
+        }
+
+        //FF,绑定事件，阻止默认事件
+        if (e.preventDefault) {
+            e.preventDefault();
+        }
+
+        return false;
+    }
+
+</script>
+</body>
+</html>
