@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>图片放大器</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <script src="js/jquery.js"></script>
+    <script src="js/angular.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <style>
+
+        .inner-zoom {
+            position: relative;
+            border: 1px dashed lightgray;
+            width: 300px;
+            height: 300px;
+            overflow: hidden;
+        }
+
+        .inner-zoom .large {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .inner-zoom .eagle-eye {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            border: 1px dashed silver;
+        }
+
+        .inner-zoom .eagle-eye img {
+            opacity: 0.2;
+        }
+
+
+        .inner-zoom .small-view {
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: white;
+            opacity: 0.6;
+            border: 1px dotted black;
+        }
+
+        .inner-zoom .overlay {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            opacity: 0.01;
+        }
+    </style>
+</head>
+<body ng-app="app">
+<div ng-controller="testCtrl">
+    <div class="inner-zoom" sc-resize="vm.zoom1.passiveView.resize(width, height)">
+        <img class="large" src="image/test1.jpg" alt="大图" sc-resize="vm.zoom1.passive.resize(width, height)"
+             sc-position="{x: vm.zoom1.passive.x, y: vm.zoom1.passive.y}" />
+        <div class="eagle-eye">
+            <img class="small" src="image/test1.jpg" alt="试验小图图片" width="100" height="100"
+                 sc-resize="vm.zoom1.active.resize(width, height)"/>
+            <div class="small-view" sc-position="vm.zoom1.activeView"></div>
+            <div class="overlay" ng-mousemove="vm.zoom1.activeView.centerTo($event.offsetX, $event.offsetY)"></div>
+        </div>
+    </div>
+</div>
+<script>
+    angular.module('app', [])
+        .controller('testCtrl', function ($scope,Zoom) {
+            var vm = $scope.vm = {};
+            vm.zoom = new Zoom();
+            vm.zoom1 = new Zoom();
+        })
+        .directive('scResize', function($parse) {
+            return {
+                restrict: 'A',
+                compile: function($element, attr) {
+                    var fn = $parse(attr['scResize']);
+                    return function(scope, element, attr) {
+                        var lastWidth = -1;
+                        var lastHeight = -1;
+                        var id = setInterval(function() {
+                            var width = element.width();
+                            var height = element.height();
+                            if (width !== lastWidth || height !== lastHeight) {
+                                lastWidth = width;
+                                lastHeight = height;
+                                scope.$apply(function() {
+                                    fn(scope, {width: width, height: height})
+                                });
+                            }
+                        }, 300);
+                        scope.$on('destroy', function() {
+                            clearInterval(id);
+                        });
+                    };
+                }
+            }
+        })
+        .directive('scPosition', function() {
+            return {
+                restrict: 'A',
+                scope: {
+                    rect: '=scPosition',
+                    left: '=scLeft',
+                    top: '=scTop',
+                    right: '=scRight',
+                    bottom: '=scBottom',
+                    width: '=scWidth',
+                    height: '=scHeight'
+                },
+                link: function($scope, $element) {
+                    $scope.$watch('left', function(value) {
+                        if (value !== undefined)
+                            $element.css('left', value)
+                    });
+                    $scope.$watch('top', function(value) {
+                        if (value !== undefined)
+                            $element.css('top', value)
+                    });
+                    $scope.$watch('right', function(value) {
+                        if (value !== undefined)
+                            $element.css('right', value)
+                    });
+                    $scope.$watch('bottom', function(value) {
+                        if (value !== undefined)
+                            $element.css('bottom', value)
+                    });
+                    $scope.$watch('width', function(value) {
+                        if (value !== undefined)
+                            $element.width(value)
+                    });
+                    $scope.$watch('height', function(value) {
+                        if (value !== undefined)
+                            $element.height(value)
+                    });
+                    $scope.$watch('rect', function(value) {
+                        if (value !== undefined) {
+                            if (value.x !== undefined)
+                                $element.css('left', value.x);
+                            if (value.y !== undefined)
+                                $element.css('top', value.y);
+                            if (value.width !== undefined)
+                                $element.width(value.width);
+                            if (value.height !== undefined)
+                                $element.height(value.height);
+                        }
+                    }, true);
+                }
+            }
+        })
+        .factory('Rect', function() {
+            function Rect() {
+                var limit = this.limit = {};
+                this.width = 0;
+                this.height = 0;
+                this.x = 0;
+                this.y = 0;
+                this.left = function() {
+                    return this.x;
+                };
+                this.right = function() {
+                    return this.x + this.width;
+                };
+                this.top = function() {
+                    return this.y;
+                };
+                this.bottom = function() {
+                    return this.y + this.height;
+                };
+                this.limitTo = function(limit) {
+                    this.limit.left = limit.left;
+                    this.limit.top = limit.top;
+                    this.limit.right = limit.right;
+                    this.limit.bottom = limit.bottom;
+                };
+                this.onResize = function() {};
+                this.resize = function(width, height) {
+                    width = Math.round(width);
+                    height = Math.round(height);
+                    if (width === this.width && height === this.height) {
+                        return;
+                    }
+
+                    this.width = width;
+                    this.height = height;
+                    if (this.onResize) {
+                        this.onResize(width, height)
+                    }
+                };
+                this.onMove = function() {};
+                this.moveTo = function(x, y) {
+                    x = Math.round(x);
+                    y = Math.round(y);
+                    if (x === this.x && y === this.y) {
+                        return;
+                    }
+                    if (limit.left !== undefined) {
+                        x = Math.max(x, limit.left);
+                    }
+                    if (limit.top !== undefined) {
+                        y = Math.max(y, limit.top);
+                    }
+                    if (limit.right !== undefined) {
+                        x = Math.min(x, limit.right - this.width);
+                    }
+                    if (limit.bottom !== undefined) {
+                        y = Math.min(y, limit.bottom - this.height);
+                    }
+                    this.x = x;
+                    this.y = y;
+                    if (this.onMove) {
+                        this.onMove(x, y)
+                    }
+                };
+                //* 根据当前长宽把矩形中心点定位于(x, y)
+                this.centerTo = function(x, y) {
+                    this.moveTo(x - this.width / 2, y - this.height / 2)
+                };
+            }
+            return Rect;
+        })
+        .factory('Zoom', function(Rect) {
+            function Zoom() {
+                var active = this.active = new Rect();
+                var activeView = this.activeView = new Rect();
+                var passive = this.passive = new Rect();
+                var passiveView = this.passiveView = new Rect();
+                // 根据三者的相对尺寸，把active中的坐标映射到passive中的坐标
+                var update = this.update = function() {
+                    var ratioX = passive.width / active.width;
+                    var ratioY = passive.height / active.height;
+                    passive.moveTo(-activeView.x * ratioX, -activeView.y * ratioY);
+                };
+                this.resize = function() {
+                    activeView.limitTo({left: 0, top: 0, right: active.width, bottom: active.height});
+                    var ratioX = passive.width / active.width;
+                    var ratioY = passive.height / active.height;
+                    activeView.resize(passiveView.width / ratioX, passiveView.height / ratioY);
+                    update();
+                };
+                passiveView.onResize = active.onResize = passive.onResize = this.resize;
+                activeView.onResize = activeView.onMove = this.update;
+            }
+            return Zoom;
+        });
+</script>
+</body>
+</html>
