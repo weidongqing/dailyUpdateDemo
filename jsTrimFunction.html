@@ -10,6 +10,7 @@
 <div style="margin: 30px;">
     <input type="text" ng-model="test" class="form-control" style="width: 400px;display: inline-block;">
     <button class="btn btn-primary"  ng-click="stringTrim(',')">转化</button>
+    {{test1}}
 </div>
 <script>
     var myApp = angular.module('myApp', []);
@@ -24,8 +25,17 @@
 //                $scope.test = $scope.test.replace(new RegExp('^\\'+char+'+|\\'+char+'+$', 'g'), '');
 //            }
 //            $scope.test = $scope.test.replace(/^\s+|\s+$/g, '');
-            $scope.test = $scope.test.replace(new RegExp('^(\\,|\\，)+|(\\,|\\，)+$', 'g'), '');
-            console.log($scope.test)
+//            $scope.test = $scope.test.replace(new RegExp('^(\\,|\\，)+|(\\,|\\，)+$', 'g'), '');
+
+            $scope.test1 = '总查询1项,命中0项';
+            $scope.test1 = $scope.test1.replace(/，/ig,',');
+            console.log($scope.test1);
+            $scope.splitnum1 = $scope.test1.replace(/^([^\d]+(\d+)[^\d]*)+$/, "$2");
+            if($scope.splitnum1 > 0){
+                $scope.data = $scope.test1.split('，')[1].split($scope.splitnum1);
+                $scope.data = $scope.test1.split('，')[0] + $scope.data[0] + '<span style="color:red;font-weight: bold;">' + $scope.splitnum1 + '</span>' + $scope.data[1]
+
+            }
         }
     })
 </script>

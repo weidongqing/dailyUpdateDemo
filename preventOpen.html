@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html ng-app='testApp'>
+<head>
+	<meta charset="utf-8">
+	<title>浏览器阻止弹出网页</title>
+	<script type="text/javascript" src="js/angular.js"></script>
+</head>
+<body ng-controller='testCtrl'>
+	<button ng-click="test()">click</button>
+<script type="text/javascript">
+	var testApp = angular.module('testApp',[]);
+	testApp.config(['$httpProvider', function($httpProvider) {
+	        $httpProvider.defaults.useXDomain = true;
+	        delete $httpProvider.defaults.headers.common['X-Requested-With'];
+         }
+    ]);
+	testApp.controller('testCtrl',function($scope,$http){
+		$scope.test = function () {
+            $scope.str1 = 'aa'
+            $scope.str2 = 'ab'
+            console.log($scope.str1 > $scope.str2)
+	        // $scope.test1()
+        }
+        $scope.test1 = function() {
+        	window.open (
+				'https://v3.bootcss.com/css/#buttons',
+				'newwindow',
+				'height=700,width=1000,top=0,left=0,toolbar=no,menubar=no,scrollbars=no,resizable=no,location=no,status=no'
+	        )
+        }
+            
+	})
+</script>
+</body>
+</html>

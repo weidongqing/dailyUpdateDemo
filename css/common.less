@@ -1,0 +1,18 @@
+.loop1(@target) when (@target > 0px) {
+  .loop1(@target - 50px);
+  @media (min-width: (@target - 50px)) and (max-width: @target) {
+    right: (1950px - @target)/2
+  }
+}
+
+.loop2(@target) when (@target > 0px) {
+  .loop2(@target - 50px);
+  @media (min-height: (@target - 50px)) and (max-height: @target) {
+    bottom: (950px - @target)/2
+  }
+}
+
+#moveBox {
+  .loop1(1900px);
+  .loop2(900px);
+}

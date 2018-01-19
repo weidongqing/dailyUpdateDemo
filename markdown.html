@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <!-- markdown editor style -->
+    <link rel="stylesheet" href="markdown-it-editor/lib/index.css">
+    <style>
+        .fullscreen{
+            margin-top:60px;
+            height: 80vh!important;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <markdown-editor v-model="content"></markdown-editor>
+</div>
+</body>
+<!-- vuejs -->
+<script src="//cdn.bootcss.com/vue/2.1.4/vue.min.js"></script>
+<!-- markdown editor component -->
+<script src="markdown-it-editor/lib/index.js"></script>
+<script type="text/javascript">
+    var vue = new Vue({
+        el: '#app',
+        data: { content: '# hello world' },
+        watch:{
+            'fullscreen': {
+                handler: function(n,o){
+                    console.log(n)
+                }
+            }
+        }
+    })
+</script>
+</html>

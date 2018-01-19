@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html ng-app="myapp">
+<head>
+    <meta charset="utf-8">
+    <script src="js/jquery.js"></script>
+    <script src="http://cdn.static.runoob.com/libs/angular.js/1.4.6/angular.min.js"></script>
+</head>
+<body ng-controller="testCtrl">
+<ul class="testlist" ng-click="test($event)">
+    <li><a href="http://www.runoob.com/angularjs/ng-ng-keydown.html"> 33</a></li>
+</ul>
+
+    <script>
+//        function doMything(){
+//            if(event.ctrlKey && event.button==0 ){
+//                event.preventDefault();
+//            }
+//        }
+        myapp = angular.module('myapp', []);
+        myapp.controller('testCtrl', function ($scope) {
+            $scope.test = function (event) {
+                if(event.ctrlKey && event.button==0 ){
+                    event.preventDefault();
+                }
+            }
+
+        })
+    </script>
+</body>
+</html>
+<!--<html>-->
+
+<!--<head>-->
+
+    <!--<title>JS禁用键盘、鼠标操作</title>-->
+
+<!--</head>-->
+
+<!--&lt;!&ndash;禁用键盘开始&ndash;&gt;-->
+
+<!--<script language="JavaScript">-->
+
+    <!--document.onkeydown=function(){-->
+
+        <!--with(window.event){-->
+
+            <!--//Ctrl + S keyCode == 83-->
+
+            <!--//F12  keyCode == 123-->
+
+            <!--if (event.ctrlKey && event.keyCode == 83)-->
+
+            <!--{event.keyCode=0;event.returnValue=false;}-->
+
+        <!--}-->
+
+    <!--}-->
+
+<!--</script>-->
+
+<!--&lt;!&ndash;禁用键盘结束&ndash;&gt;-->
+
+<!--&lt;!&ndash;禁用鼠标右键&ndash;&gt;-->
+
+<!--<body oncontextmenu="window.event.returnValue=false" onselectstart="event.returnValue=false" >-->
+
+<!--<center>微笔记_博客</center>-->
+
+<!--</body>-->
+
+<!--</html>-->

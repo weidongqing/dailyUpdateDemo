@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+
+<head>
+    <meta charset="utf-8">
+    <title>node遍历</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <script src="js/jquery.js"></script>
+    <script src="js/angular.js"></script>
+    <link rel="stylesheet" href="js/app.js">
+</head>
+
+<body ng-controller="MyCtrl">
+<div>
+    <!-- 	<table class="table">
+            <thead>
+                <tr>
+                <th class="index">序号</th>
+                <th style="width:250px;">名称</th>
+                <th>详细信息</th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="statistic in statistics" ng-class="{'summary-header':statistic.header}">
+                    <td>{{statistic.eid}}</td>
+                    <td>{{statistic.name}}</td>
+                    <td>{{statistic.count}}</td>
+                </tr>
+            </tbody>
+        </table> -->
+</div>
+<!--自定义改编版  -->
+
+<script type="text/javascript">
+    var myApp = angular.module('myApp', []);
+    myApp.controller('MyCtrl', function ($scope) {
+        $scope.unique = function (array) {
+            var obj = {};
+            return array.filter(function(item, index, array){
+                return obj.hasOwnProperty(typeof item + JSON.stringify(item)) ? false : (obj[typeof item + JSON.stringify(item)] = true)
+            })
+        };
+        $scope.testarr = [
+            {"name": "imuserinfo", "count": 1614},
+            {"name": "imuserinfo", "count": 1614},
+            {"name": "immsginfo", "count": 370},
+            {"name": "immsginfo", "count": 370},
+            {"name": "immsginfo","count": 370},
+            {"name": "immsginfo", "count": 370},
+            {"name": "immsginfo", "count": 370}
+        ];
+        console.log($scope.unique($scope.testarr));
+        console.log($scope.testarr)
+
+    });
+</script>
+</body>
+
+</html>
