@@ -4,6 +4,6 @@ var gulp = require('gulp'),
 gulp.task('testless',function(){
 	gulp.src('css/common.less')
 	    .pipe(less())
-	    .pipe(gulp.dest('css'))
+	    .pipe(gulp.dest('data'))
 });
 gulp.task('default',['testless'])

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+
+<head>
+    <meta charset="utf-8">
+    <title>angular-bootstrap-contextmenu</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <script src="js/jquery.js"></script>
+    <script src="js/angular.js"></script>
+    <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js"></script>
+</head>
+
+<body ng-controller="MyCtrl">
+	<div class="list-group">
+	  <a href="#" class="list-group-item" ng-repeat="item in items" context-menu="menuOptions">
+		<span class="badge">{{item.cost}}</span>
+		  {{item.name}}
+	  </a>
+	</div>
+<script type="text/javascript">
+    var myApp = angular.module('myApp', ['ui.bootstrap','ui.bootstrap.contextMenu']);
+    myApp.controller('MyCtrl', function ($scope) {
+        $scope.player = {
+          gold: 100
+        };
+        $scope.items = [
+          { name: 'Small Health Potion', cost: 4 },
+          { name: 'Small Mana Potion', cost: 5 },
+          { name: 'Iron Short Sword', cost: 12 }
+        ];
+        $scope.menuOptions = [
+          ['Buy', function ($itemScope) {
+              $scope.player.gold -= $itemScope.item.cost;
+          }],
+          null,
+          ['Sell', function ($itemScope) {
+              $scope.player.gold += $itemScope.item.cost;
+          }, function ($itemScope) {
+              return $itemScope.item.name.match(/Iron/) == null;
+          }],
+          null,
+          ['More...', [
+              ['Alert Cost', function ($itemScope) {
+                  alert($itemScope.item.cost);
+              }],
+              ['Alert Player Gold', function ($itemScope) {
+                  alert($scope.player.gold);
+              }]
+          ]]
+        ];
+    	$scope.otherMenuOptions = [
+          ['Favorite Color', function ($itemScope, $event, color) {
+          		alert(color);
+          }]
+        ]
+    });
+</script>
+</body>
+
+</html>
